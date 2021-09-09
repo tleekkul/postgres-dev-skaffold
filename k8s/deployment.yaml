@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-dev
+  labels:
+    app: postgres-dev
+spec:
+  clusterIP: None
+  ports:
+    - port: 50051
+      name: postgres-dev
+  selector:
+    app: postgres-dev
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-dev
+  labels:
+    app: postgres-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-dev
+  template:
+    metadata:
+      labels:
+        app: postgres-dev
+    spec:
+      containers:
+        - name: postgres-dev
+          image: postgres-dev
+          ports:
+            - containerPort: 5432
+              name: http
+          env:
+            - name: POSTGRES_PASSWORD
+              value: example-password
